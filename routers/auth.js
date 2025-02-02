@@ -11,7 +11,6 @@ const router = express.Router();
 
 const Registerschema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
-  father_name: Joi.string().min(3).max(30),
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
     .required(),
@@ -20,9 +19,7 @@ const Registerschema = Joi.object({
 });
 
 const loginschema = Joi.object({
-  email: Joi.string()
-    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
-    .required(),
+  cnic:  Joi.string().min(3).max(15).required(),
   password: Joi.string().min(3).required(),
 });
 
@@ -59,7 +56,7 @@ router.post("/signup", async (req, res) => {
       { expiresIn: "15d" }
       // Token expires in 1 hour (you can change this as needed)
     );
-    console.log("token==>", token);
+    // console.log("token==>", token);
 
     sendResponse(res, 201, { user: newUser, token }, false, "User is successfully registered");
   } catch (err) {
@@ -75,9 +72,9 @@ router.post("/login", async (req, res) => {
       return sendResponse(res, 403, null, true, error.message);
     }
 
-    const user = await User.findOne({ email: value.email }).lean();
+    const user = await User.findOne({ cnic: value.cnic }).lean();
     if (!user) {
-      return sendResponse(res, 403, null, true, "User is not registered");
+      return sendResponse(res, 404, null, true, "User is not registered");
     }
 
     const isPasswordValid = await bcrypt.compare(value.password, user.password);

@@ -13,7 +13,8 @@ const UserSchema = Schema(
         address: {type: String},
         DOB: {type: String},
         city: {type: String, trim: true},
-        country: {type: String, trim: true}
+        country: {type: String, trim: true},
+        postal_code: {type: String}
     },{
         timestamps: true
     }

@@ -53,7 +53,7 @@ router.post("/signup", async (req, res) => {
     const token = jwt.sign(
       { userId: newUser._id, email: newUser.email },
       process.env.AUTH_SECRET,
-      { expiresIn: "15d" }
+      { expiresIn: "1d" }
       // Token expires in 1 hour (you can change this as needed)
     );
     // console.log("token==>", token);

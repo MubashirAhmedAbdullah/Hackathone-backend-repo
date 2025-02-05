@@ -28,6 +28,7 @@ const tokenBlacklist = new Set(); // In-memory token blacklist (use Redis for pr
 
 
 router.post("/signup", async (req, res) => {
+  try {
     const { error, value } = Registerschema.validate(req.body);
     if (error) {
       return sendResponse(res, 403, null, true, error.message);
@@ -57,7 +58,11 @@ router.post("/signup", async (req, res) => {
     );
     // console.log("token==>", token);
 
-    sendResponse(res, 201, { user: newUser, token }, false, "User is successfully registered");
+    sendResponse(res, 200, { user: newUser, token }, false, "User is successfully registered");
+  } catch (err) {
+    console.error("Error =>", err);
+    sendResponse(res, 500, null, true, "An unexpected error occurred");
+  }
 });
 
 router.post("/login", async (req, res) => {
